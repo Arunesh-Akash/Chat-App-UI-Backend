@@ -1,9 +1,13 @@
 const express=require('express');
+const session=require('express-session');
 const login=express();
 const User=require('../Schema/userSchema');
 const AppUtils=require('../AppUtils');
 const Constants=require('../Constants');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
+const verifyToken=require('../Middleware/verifyToken')
+
 
 login.post('/',async(req,res)=>{
     const request={
@@ -19,7 +23,15 @@ login.post('/',async(req,res)=>{
         if(data){
             let passwordMatch=await bcrypt.compare(request.password,data.password);
             if(passwordMatch){
-                res.status(200).json(AppUtils.generateSuccess("AUTHORISED","Sucessfully Logged In"));
+               jwt.sign({data},process.env.JWT_SECRET_KEY,{expiresIn:'1h'},(err,token)=>{
+                    if(err){
+                    res.status(500).json(AppUtils.generateError('Something went wrong',err));
+                    }
+                    
+                    res.status(200).json({status:"AUTHORISED",message: "Sucessfully Logged In",email:request.email,token:token});
+                    
+                });
+                
             }
             else{
                 res.status(401).json(AppUtils.generateError("UNAUTHORISED","Invalid Credentials"));
@@ -33,7 +45,8 @@ login.post('/',async(req,res)=>{
     }
 });
 
-login.get('/',async(req,res)=>{
+
+login.get('/',verifyToken,async(req,res)=>{
     try{
         const userData= await User.find();
         res.status(200).json(userData);
@@ -41,6 +54,7 @@ login.get('/',async(req,res)=>{
     catch(err){
         res.status(500).json(AppUtils.generateError(err.code,err.message));
     }
-})
+});
 
+  
 module.exports=login;
