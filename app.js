@@ -20,7 +20,7 @@ const server=app.listen(4000,()=>{
 })
 const io = socket(server, {
     cors: {
-      origin: "https://chat-app-fxot.onrender.com/",
+      origin: "https://chatapp-s5nx.onrender.com",
       credentials: true,
     },
   });
