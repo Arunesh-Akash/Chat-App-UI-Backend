@@ -8,7 +8,7 @@ const socket=require('socket.io');
 const messageRouter = require("./Routes/messageRouter");
 const app=express();
 require('dotenv').config();
-const port=process.env.PORT || 4000;
+const port=process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
@@ -17,7 +17,10 @@ app.use('/user/login',login);
 app.use('/message',messageRouter);
 
 const server=app.listen(port,()=>{
-    console.log("Server is listening on 4000");
+    console.log(`Server is listening on ${port}`);
+    app.get('/',(req,res)=>{
+      res.send("Server is live");
+    })
 })
 const io = socket(server, {
     cors: {
