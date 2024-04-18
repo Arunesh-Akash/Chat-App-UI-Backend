@@ -28,7 +28,7 @@ login.post('/',async(req,res)=>{
                     res.status(500).json(AppUtils.generateError('Something went wrong',err));
                     }
                     
-                    res.status(200).json({status:"AUTHORISED",message: "Sucessfully Logged In",email:request.email,token:token});
+                    res.status(200).json({status:"AUTHORISED",message: "Successfully Logged In",email:request.email,token:token,name:data.userName});
                     
                 });
                 
@@ -56,5 +56,12 @@ login.get('/',verifyToken,async(req,res)=>{
     }
 });
 
+const users = new Map();
+
+login.post('/onlineStatus', (req, res) => {
+  const { user } = req.body;
+  const isOnline = users.has(user) && users.get(user).isOnline;
+  res.json({ isOnline });
+});
   
 module.exports=login;
