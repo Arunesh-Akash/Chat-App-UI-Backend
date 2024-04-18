@@ -1,7 +1,6 @@
 const express=require("express");
 const mongoose=require("mongoose");
-mongoose.connect("mongodb://localhost:27017/chat-app");
-// mongoose.connect("mongodb+srv://akashkr099:0lYcEy0tM6eCailJ@chat-app-db.77rk4qs.mongodb.net/?retryWrites=true&w=majority");
+mongoose.connect("mongodb+srv://akashkr099:0lYcEy0tM6eCailJ@chat-app-db.77rk4qs.mongodb.net/?retryWrites=true&w=majority");
 const login=require('./Routes/loginRouter');
 const signUp=require('./Routes/signupRouter');
 const cors=require('cors');
